@@ -3,6 +3,20 @@ class Category:
         self.category = category
         self.ledger = []
 
+    def __str__(self):
+        header = [self.category.center(30, '*')]
+
+        strings = []
+        for transaction in self.ledger:
+            description = transaction["description"] if len(transaction["description"]) <= 23 else transaction["description"][:23]
+            amount = f"{transaction['amount']:.2f}"
+
+            strings.append(description.ljust(23) + amount.rjust(7))
+
+        total = []
+
+        return '\n'.join(header + strings)
+
     def deposit(self, amount, description=''):
         self.ledger.append({"amount": amount, "description": description})
 
@@ -32,8 +46,8 @@ food = Category("Food")
 entertainment = Category("Entertainment")
 business = Category("Business")
 
-food.deposit(900)
-food.deposit(400)
+food.deposit(900, "asdf")
+food.deposit(400, "fff")
 food.withdraw(45.67, "milk, cereal, eggs, bacon, bread")
-print(food.transfer(20, entertainment))
-print(entertainment.ledger)
+print(str(food))
+print(f"*************Food*************\ndeposit                 900.00\nmilk, cereal, eggs, bac -45.67\nTransfer to Entertainme -20.00\nTotal: 834.33")
