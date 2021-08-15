@@ -71,14 +71,18 @@ def create_spend_chart(categories):
 
     print('\n'.join(header + rows + bar))
 
-    rows = []
+    label_rows = []
     i = 0
-    while i < 4:
-        row = [' ' + category.category[i] if 0 <= i <= len(category.category) else "  " for category in categories]
+    while i < 20:
+        row = '    ' + ''.join([' ' + category.category[i] if 0 <= i < len(category.category) else "  " for category in categories])
         i += 1
-        if row == '      ':
+        if all(char == ' ' for char in row):
             break
-        print(row)
+        
+        label_rows.append(row)
+    
+    print('\n'.join(header + rows + bar + label_rows))
+
 
 food = Category("Food")
 entertainment = Category("Entertainment")
