@@ -22,7 +22,7 @@ class Category:
 
     def withdraw(self, amount, description=''):
         if self.check_funds(amount):
-            self.ledger.append({"amount": -amount, "description": description})
+            self.deposit(-amount, description)
 
         return self.check_funds(amount)
 
@@ -31,7 +31,7 @@ class Category:
 
     def transfer(self, amount, category):
         if self.check_funds(amount):
-            self.ledger.append({"amount": -amount, "description": f"Transfer to {category.category}"})
+            self.deposit(-amount, f"Transfer to {category.category}")
             category.deposit(amount, f"Transfer from {self.category}")
         
         return self.check_funds(amount)
@@ -43,13 +43,13 @@ def create_spend_chart(categories):
     sums = {}
 
     for category in categories:
-        spent = -sum([transaction["amount"] for transaction in category.ledger if transaction["amount"] < 0])
-        sums[category.category] = spent
+        amount_spent = -sum([transaction["amount"] for transaction in category.ledger if transaction["amount"] < 0])
+        sums[category.category] = amount_spent
     
     total = sum(sums.values())
 
     for category in sums.keys():
-        sums[category] = sums[category] / total * 100
+        sums[category] = sums[category] / total * 100 if total != 0 else 0
 
     header = ["Percentage spent by category"]
 
@@ -90,4 +90,3 @@ food.deposit(400, "fff")
 food.withdraw(45.67, "milk, cereal, eggs, bacon, bread")
 entertainment.deposit(2000, "ferew")
 print(create_spend_chart([food, entertainment]))
-print("Percentage spent by category\n100|          \n 90|          \n 80|          \n 70|    o     \n 60|    o     \n 50|    o     \n 40|    o     \n 30|    o     \n 20|    o  o  \n 10|    o  o  \n  0| o  o  o  \n    ----------\n     B  F  E  \n     u  o  n  \n     s  o  t  \n     i  d  e  \n     n     r  \n     e     t  \n     s     a  \n     s     i  \n           n  \n           m  \n           e  \n           n  \n           t  ")
