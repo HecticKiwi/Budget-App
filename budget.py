@@ -51,8 +51,6 @@ def create_spend_chart(categories):
     for category in sums.keys():
         sums[category] = sums[category] / total * 100
 
-    print(sums)
-
     header = ["Percentage spent by category"]
 
     percentage = 100
@@ -60,28 +58,27 @@ def create_spend_chart(categories):
 
     while percentage >= 0:
         row = f"{percentage}|".rjust(4)
+        row += ' '
 
         for category in categories:
-            row += " o" if sums[category.category] >= percentage else "  "
+            row += "o  " if sums[category.category] >= percentage else "   "
 
         rows.append(row)
         percentage -= 10
 
-    bar = ["    " + '-' * (len(categories) * 2 + 2)]
-
-    print('\n'.join(header + rows + bar))
+    bar = ["    -" + '-' * (len(categories) * 3)]
 
     label_rows = []
     i = 0
-    while i < 20:
-        row = '    ' + ''.join([' ' + category.category[i] if 0 <= i < len(category.category) else "  " for category in categories])
+    while True:
+        row = '     ' + ''.join([category.category[i] + '  ' if 0 <= i < len(category.category) else "   " for category in categories])
         i += 1
         if all(char == ' ' for char in row):
             break
         
         label_rows.append(row)
     
-    print('\n'.join(header + rows + bar + label_rows))
+    return '\n'.join(header + rows + bar + label_rows)
 
 
 food = Category("Food")
@@ -92,4 +89,5 @@ food.deposit(900, "asdf")
 food.deposit(400, "fff")
 food.withdraw(45.67, "milk, cereal, eggs, bacon, bread")
 entertainment.deposit(2000, "ferew")
-create_spend_chart([food, entertainment])
+print(create_spend_chart([food, entertainment]))
+print("Percentage spent by category\n100|          \n 90|          \n 80|          \n 70|    o     \n 60|    o     \n 50|    o     \n 40|    o     \n 30|    o     \n 20|    o  o  \n 10|    o  o  \n  0| o  o  o  \n    ----------\n     B  F  E  \n     u  o  n  \n     s  o  t  \n     i  d  e  \n     n     r  \n     e     t  \n     s     a  \n     s     i  \n           n  \n           m  \n           e  \n           n  \n           t  ")
