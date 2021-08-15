@@ -13,9 +13,9 @@ class Category:
 
             strings.append(description.ljust(23) + amount.rjust(7))
 
-        total = []
+        total = [f"Total: {self.get_balance()}"]
 
-        return '\n'.join(header + strings)
+        return '\n'.join(header + strings + total)
 
     def deposit(self, amount, description=''):
         self.ledger.append({"amount": amount, "description": description})
@@ -40,7 +40,20 @@ class Category:
         return amount <= self.get_balance()
 
 def create_spend_chart(categories):
-    pass
+    sums = {}
+
+    for category in categories:
+        spent = -sum([transaction["amount"] for transaction in category.ledger if transaction["amount"] < 0])
+        sums[category.category] = spent
+    
+    total = sum(sums.values())
+
+    for category in sums.keys():
+        sums[category] = sums[category] / total * 100
+
+    print(sums)
+
+    header = "Percentage spent by category"
 
 food = Category("Food")
 entertainment = Category("Entertainment")
@@ -49,5 +62,5 @@ business = Category("Business")
 food.deposit(900, "asdf")
 food.deposit(400, "fff")
 food.withdraw(45.67, "milk, cereal, eggs, bacon, bread")
-print(str(food))
-print(f"*************Food*************\ndeposit                 900.00\nmilk, cereal, eggs, bac -45.67\nTransfer to Entertainme -20.00\nTotal: 834.33")
+entertainment.deposit(2000, "ferew")
+create_spend_chart([food, entertainment])
