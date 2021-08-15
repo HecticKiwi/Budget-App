@@ -53,7 +53,7 @@ def create_spend_chart(categories):
 
     print(sums)
 
-    header = "Percentage spent by category"
+    header = ["Percentage spent by category"]
 
     percentage = 100
     rows = []
@@ -66,6 +66,18 @@ def create_spend_chart(categories):
 
         rows.append(row)
         percentage -= 10
+
+    bar = ["    " + '-' * (len(categories) * 2 + 2)]
+
+    print('\n'.join(header + rows + bar))
+
+    rows = []
+    i = 0
+    while i < 4:
+        row = [' ' + category.category[i] if 0 <= i <= len(category.category) else "  " for category in categories]
+        i += 1
+        if row == '      ':
+            break
         print(row)
 
 food = Category("Food")
